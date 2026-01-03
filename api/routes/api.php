@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\UserController;
 use App\Messages\Auth\Request\AuthDefaultMessages;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
@@ -30,9 +31,19 @@ Route::prefix('/v1')->group(function() {
                 );
 
                 return $status === Password::ResetLinkSent
-                                    ? back()->with(['status' => __($status)])
-                                    : back()->withErrors(['status' => __($status)]);
-            })->middleware('guest');
+                                    ? response()->json([
+                                        'success' => true,
+                                        'message' => __($status)
+
+                                    ], 200)
+
+                                    : response()->json([
+                                        'success' => false,
+                                        'message' => 'Erro na solicitação: forgot-password',
+                                        'error' => [__($status)]
+                                    ], 400);
+
+            })->name('password.email');;
 
             Route::get('/reset-password/{token}', function(string $token) {
                 return response()->json([
@@ -44,14 +55,12 @@ Route::prefix('/v1')->group(function() {
 
             Route::post('/reset-password', function(Request $r) {
                 $r->validate([
-                    'name' => ['required', 'string', 'max:120'],
+                    'token' => ['required'],
                     'email' => ['required', 'email'],
                     'password' => ['required', 'min:8'],
                 ], [
-                    'name.required' => AuthDefaultMessages::NAME_REQUIRED->value,
-                    'name.string' => AuthDefaultMessages::NAME_STRING_FORMAT->value,
-                    'name.max' => AuthDefaultMessages::NAME_MAX->value,
-                    
+                    'token.required' => 'O token para redefinição da senha é obrigatório',
+
                     'email.required' => AuthDefaultMessages::EMAIL_REQUIRED->value,
                     'email.email' => AuthDefaultMessages::EMAIL_STRING_FORMAT->value,
                     
@@ -60,11 +69,12 @@ Route::prefix('/v1')->group(function() {
                 ]);
 
                 $status = Password::reset(
-                    $r->only('email', 'name', 'password', 'token'),
+                    $r->only('email', 'password', 'token'),
                     function(User $user, string $password)
                     {
                         $user->forceFill([
                             'password' => Hash::make($password)
+
                         ])->setRememberToken(Str::random(60));
 
                         $user->save();
@@ -76,16 +86,21 @@ Route::prefix('/v1')->group(function() {
                 return $status === Password::PasswordReset
                                     ? response()->json([
                                         'success' => true,
-                                        'message' => 'Senha redefinada com sucesso!',
-                                        'data' => __($status)
+                                        'message' => __($status)
                                     ], 200)
 
                                     : response()->json([
                                         'success' => false,
-                                        'message' => 'Erro',
+                                        'message' => 'Erro na solicitação: /reset-password',
                                         'error' => [__($status)]
                                     ], 400);
             })->name('password.update');
+
+            Route::controller(UserController::class)->group(function() {
+                Route::put('/update/user-data', 'update');
+                Route::delete('/cancel-account', 'destroy');
+
+            });
         });
     });
 

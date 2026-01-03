@@ -41,7 +41,7 @@ class AuthRequest extends FormRequest
             'email.unique' => AuthDefaultMessages::EMAIL_UNIQUE->value,
 
             'password.required' => AuthDefaultMessages::PASSWORD_REQUIRED->value,
-            'password.min' => AuthDefaultMessages::PASSWORD_MIN->value,                    
+            'password.min' => AuthDefaultMessages::PASSWORD_MIN->value,
         ];
     }
 }

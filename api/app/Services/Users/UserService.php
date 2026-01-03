@@ -21,4 +21,16 @@ class UserService
     {
         return $this->userRepository->findByEmail($email);
     }
+
+    public function findById(string $id)
+    {
+        $user = $this->userRepository->findById($id);
+
+        if(!$user)
+        {
+            throw new \Illuminate\Database\Eloquent\ModelNotFoundException('Usuário não localizado pelo ID repassado');
+        }
+
+        return $user;
+    }
 }
