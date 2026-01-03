@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Address\AddressFullDataRequest;
 use App\Http\Requests\Address\AddressByCepRequest;
 use App\Services\Address\AddressService;
-use Illuminate\Http\Request;
-
 class AddressController extends Controller
 {
     public function __construct(
