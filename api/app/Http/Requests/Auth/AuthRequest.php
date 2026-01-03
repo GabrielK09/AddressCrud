@@ -22,10 +22,12 @@ class AuthRequest extends FormRequest
      */
     public function rules(): array
     {
+        $required = $this->isMethod('POST') ? 'required' : 'sometimes';
+
         return [
-            'name' => ['required', 'string', 'max:120'],
-            'email' => ['required', 'email', 'unique:App\Models\User,email'],
-            'password' => ['required', 'min:8'],
+            'name' => [$required, 'string', 'max:120'],
+            'email' => [$required, 'email', 'unique:App\Models\User,email'],
+            'password' => [$required, 'min:8'],
         ];
     }
 

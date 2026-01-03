@@ -33,4 +33,13 @@ class UserService
 
         return $user;
     }
+
+    public function update(array $data)
+    {
+        $userDTO = new UserDTO(
+            $data['name'],
+            $data['email'],
+            $data['password'],
+        );
+    }
 }

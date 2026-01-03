@@ -17,9 +17,10 @@ Possuindo o envio de e-mails para o 'esqueci minha senha', precisa ser configura
 MAIL_MAILER=smtp
 MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=gkltdafromlaravel@gmail.com
-MAIL_PASSWORD=ogvxacsrlynojwmm
+MAIL_USERNAME=<email>
+MAIL_PASSWORD=<senha>
 ```
+
 E como proposto, a consulta de dados por uma API externa, utilizando a API Brasil API: https://brasilapi.com.br/docs#tag/CEP-V2, e adicionando a tag referente a nossa .env para mantermos em 'sigilo':
 
 ```bash
