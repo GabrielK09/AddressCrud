@@ -76,4 +76,9 @@ class AuthController extends Controller
         $req->user()->CurrentAccessToken()->delete();
         return apiSuccess('Logout bem sucedido!');
     }
+
+    public function forgotPassword()
+    {
+        
+    }
 }
