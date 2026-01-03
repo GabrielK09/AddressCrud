@@ -11,10 +11,6 @@ APP_FALLBACK_LOCALE=pt-BR
 
 O banco de dados utilizado foi do Postgresql no https://supabase.com/, dessa forma, não precisará rodar nada localmente para o banco de dados, a migrate já foi rodada e está online.
 
-``` bash
-DB_CONNECTION=pgsql
-DB_URL=postgresql://postgres.zkyqfgyttercwllckegl:AddresCrudLego.0912@aws-1-us-east-1.pooler.supabase.com:5432/postgres
-```
 Possuindo o envio de e-mails para o 'esqueci minha senha', precisa ser configurado o envio via SMTP, alterando principalmente o *MAIL_MAILER* para o canal esperado, nesse caso, *SMTP*:
 
 ```bash
