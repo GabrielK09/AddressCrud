@@ -1,33 +1,6 @@
-# .ENV
+# 📌 Geral
 
-Para inicio do projeto, algumas configurações em algumas tags precisam ser feitas na nossa .env para o projeto rodar corretamente:
-
-``` bash
-APP_LOCALE=pt-BR 
-# Para o lang poder retornar corretamente as 
-# Mensagens de reset da senha
-APP_FALLBACK_LOCALE=pt-BR
-```
-
-O banco de dados utilizado foi do Postgresql no https://supabase.com/, dessa forma, não precisará rodar nada localmente para o banco de dados, a migrate já foi rodada e está online.
-
-Possuindo o envio de e-mails para o 'esqueci minha senha', precisa ser configurado o envio via SMTP, alterando principalmente o *MAIL_MAILER* para o canal esperado, nesse caso, *SMTP*:
-
-```bash
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.gmail.com
-MAIL_PORT=587
-MAIL_USERNAME=<email>
-MAIL_PASSWORD=<senha>
-```
-
-E como proposto, a consulta de dados por uma API externa, utilizando a API Brasil API: https://brasilapi.com.br/docs#tag/CEP-V2, e adicionando a tag referente a nossa .env para mantermos em 'sigilo':
-
-```bash
-ADDRESS_API_URL_V2=https://brasilapi.com.br/api/cep/v2
-```
-
-### Alguns comandos que precisam ser rodados no terminal também
+### Intuito
 
 ```bash
 # Dentro de nosso caminho api/, rode os seguintes comandos
@@ -129,8 +102,8 @@ public function __construct(
 | GET | /api/v1/address/show-{user_id}-{address_id}-address            | Exibe dados do endereço por usuário e ID do endereço| 🔐 |
 | GET | /api/v1/address/consult-cep/{cep}                              | Consulta rápida do CEP, sem gravar | 🔐 |
 | PUT | /api/v1/address/update/{address_id}                            | Alterar dados do endereço por ID| 🔐 |
-| PUT | /api/v1/address/update/set-main-address/{user_id}/{address_id} | Definir endereço como principal por ID | 🔐 |
 | DELETE   | /api/v1/address/remove/{user_id}/{address_id}                  | Deleta o endereço por ID | 🔐 |
 
 
 ## Camadas
+
