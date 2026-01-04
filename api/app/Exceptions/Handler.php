@@ -26,11 +26,6 @@ class Handler extends ExceptionHandler
             return apiError($e->getMessage() ?? 'Erro na consulta do banco de dados', [], false, 400);
         }
 
-        if($e instanceof \App\Exceptions\NotFoundExceptions\User\UserNotFoundException)
-        {
-            return apiError($e->getMessage(), [], false, $e->getStatusCode());
-        }
-
         if($e instanceof \App\Exceptions\NotFoundExceptions\Address\AddressNotFoundException)
         {
             return apiError($e->getMessage(), [], false, $e->getStatusCode());

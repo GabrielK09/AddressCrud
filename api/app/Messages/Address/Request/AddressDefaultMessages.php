@@ -6,7 +6,10 @@ enum AddressDefaultMessages: string
 {
     case CEP_REQUIRED = 'O CEP é obrigatório!';
     case CEP_STRING_FORMAT = 'O CEP precisa estar em um formato válido!';
-    case CEP_MAX = 'O CEP precisa estar dentro do limite de caracteres (9)!';
+    case CEP_MAX = 'O CEP precisa estar dentro do limite de caracteres (8)!';
+    case CEP_MIN = 'O CEP precisa estar dentro do limite minímo de caracteres (8)!';
+    case CEP_REGEX = 'O CEP precisa ser formatado para um formato válido!';
+    case CEP_PROHIBITED = 'A alteração de um endereço não permite a alteração do CEP!';
 
     case STATE_REQUIRED = 'O Estado é obrigatório!';
     case STATE_STRING_FORMAT = 'O Estado precisa estar em um formato válido!';

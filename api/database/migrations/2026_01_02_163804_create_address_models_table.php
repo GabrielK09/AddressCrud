@@ -12,13 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('address_data', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('address_id')->unique();
-            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
-
-            $table->unsignedBigInteger('user_id');
-            $table->string('user', 120);
-            
+            $table->id();            
             $table->string('cep', 8);
             $table->string('state', 2);
             $table->string('city', 120);
@@ -28,7 +22,6 @@ return new class extends Migration
             $table->string('longitude', 200)->nullable();
             $table->string('latitude', 200)->nullable();
             $table->boolean('was_edited')->default(false);
-            $table->boolean('is_main_address')->default(false);
             
             $table->timestamps();
         });

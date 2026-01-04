@@ -14,9 +14,9 @@ class AddressController extends Controller
         protected AddressService $addressService
     ){}
     
-    public function index(Request $r)
+    public function index()
     {
-        return apiSuccess('Todos os endereços cadastrados', $this->addressService->index($r->user()->id));
+        return apiSuccess('Todos os endereços cadastrados', $this->addressService->index());
     }
 
     public function storeFullData(AddressFullDataRequest $req)
@@ -31,9 +31,9 @@ class AddressController extends Controller
         
     }
 
-    public function show(Request $r, string $addressId)
+    public function show(string $addressId)
     {
-        return apiSuccess('Dados do endereço', $this->addressService->show($r->user()->id, $addressId));
+        return apiSuccess('Dados do endereço', $this->addressService->show($addressId));
     }
 
     public function update(AddressFullDataRequest $req, string $addressId)
@@ -41,9 +41,9 @@ class AddressController extends Controller
         return apiSuccess('Endereço alterado com sucesso!', $this->addressService->update($req->validated(), $addressId));
     }
 
-    public function destroy(Request $r, string $addressId)
+    public function destroy(string $addressId)
     {
-        return apiSuccess('Endereço deletado com sucesso!', $this->addressService->destroy($r->user()->id, $addressId));
+        return apiSuccess('Endereço deletado com sucesso!', $this->addressService->destroy($addressId));
     }
 
     public function speedFetch(string $cep)

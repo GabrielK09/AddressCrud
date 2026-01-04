@@ -3,22 +3,13 @@
 namespace App\Http\Requests\Address;
 
 use App\Messages\Address\Request\AddressDefaultMessages;
-use App\Messages\DefaultMessages;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class AddressFullDataRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return Auth::check();
-    }
-
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'cep' => formatCEP($this->cep)
-        ]);
+        return true;
     }
 
     public function rules(): array
@@ -26,8 +17,15 @@ class AddressFullDataRequest extends FormRequest
         $required = $this->isMethod('POST') ? 'required' : 'sometimes';
 
         return [
-            'user_id' => ['required', 'exists:App\Models\User,id'],
-            'cep' => ['required', 'string', 'max:8'],
+            'cep' => $this->isMethod('POST') ? [
+                'bail',    
+                'required',    
+                'string', 
+                'min:9', 
+                'max:9'
+            ] : [
+                ['prohibited']
+            ],
             'state' => [$required, 'string', 'max:2'], 
             'city' => [$required, 'string', 'max:120'], 
             'neighborhood' => [$required, 'string', 'max:120'], 
@@ -40,12 +38,12 @@ class AddressFullDataRequest extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required' => DefaultMessages::USER_ID->value,
-            'user_id.exists' => DefaultMessages::USER_EXISTS->value,
-
             'cep.required' => AddressDefaultMessages::CEP_REQUIRED->value,
+            'cep.prohibited' => AddressDefaultMessages::CEP_PROHIBITED->value,
             'cep.string' => AddressDefaultMessages::CEP_STRING_FORMAT->value,
             'cep.max' => AddressDefaultMessages::CEP_MAX->value,
+            'cep.min' => AddressDefaultMessages::CEP_MIN->value,
+            'cep.regex' => AddressDefaultMessages::CEP_REGEX->value,
 
             'state.required' => AddressDefaultMessages::STATE_REQUIRED->value, 
             'state.string' => AddressDefaultMessages::STATE_STRING_FORMAT->value, 

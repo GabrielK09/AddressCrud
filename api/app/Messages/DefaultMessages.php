@@ -4,6 +4,6 @@ namespace App\Messages;
 
 enum DefaultMessages: string
 {
-    case USER_ID = 'O identificador do usuário precisa estar em um formato válido!';
-    case USER_EXISTS = 'Usuário não localizado!';
+    case EMAIL_PROHIBITED = 'O e-mail do usuário não pode ser alterada por esse meio!';
+    case PASSWORD_PROHIBITED = 'A senha do usuário não pode ser alterada por esse meio!';
 }

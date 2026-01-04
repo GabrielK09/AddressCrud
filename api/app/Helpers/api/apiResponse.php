@@ -1,6 +1,6 @@
 <?php
 
-function apiSuccess($message = 'Sucesso!', $data = [], $success = true, $status = 200)
+function apiSuccess(string $message = 'Sucesso!', mixed $data = [], bool $success = true, int $status = 200)
 {
     return response()->json([
         'success' => $success,
@@ -11,7 +11,7 @@ function apiSuccess($message = 'Sucesso!', $data = [], $success = true, $status 
     ], $status);
 };
 
-function apiError($message, $data = [], $success = false, $status = 400)
+function apiError(string $message, mixed $data = [], bool $success = false, int $status = 400)
 {
     return response()->json([
         'success' => $success,

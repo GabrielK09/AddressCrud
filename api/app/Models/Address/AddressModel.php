@@ -8,12 +8,9 @@ class AddressModel extends Model
 {
     protected $table = 'address_data';
 
-    //protected $primaryKey = 'address_id';
+    protected $primaryKey = 'id';
 
     protected $fillable = [    
-        'address_id',
-        'user_id',
-        'user',         
         'cep',
         'state', 
         'city', 
@@ -22,7 +19,11 @@ class AddressModel extends Model
         'service', 
         'longitude', 
         'latitude', 
-        'was_edited', 
-        'is_main_address'
+        'was_edited'
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at'
     ];
 }

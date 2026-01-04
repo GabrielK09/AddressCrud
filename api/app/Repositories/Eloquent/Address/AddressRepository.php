@@ -5,39 +5,20 @@ namespace App\Repositories\Eloquent\Address;
 use App\DTO\Address\api\AddressApiDTO;
 use App\Models\Address\AddressModel;
 use App\Repositories\Interfaces\Address\AddressContract;
-use App\Repositories\Interfaces\User\UserContract;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class AddressRepository implements AddressContract
 {
-    public function __construct(
-        protected UserContract $userRepository
-    ){}
-
-    public function index(string $userId): Collection
+    public function index(): Collection
     {
         return AddressModel::query()
-                            ->where('user_id', $userId)
                             ->get();
-    }
-
-    public function getLastUuId(string $userId, string $addressId): bool
-    {
-        return AddressModel::query()
-                            ->where('user_id', $userId)
-                            ->where('address_id', $addressId)
-                            ->exists();
     }
 
     public function store(AddressApiDTO $data): AddressModel
     {
-        $user = $this->userRepository->findById($data->user_id);
-
         return AddressModel::create([
-            'address_id' => $data->address_api,
-            'user_id' => $user->id,
-            'user' => $user->name, 
             'cep' => $data->cep,
             'state' => $data->state, 
             'city' => $data->city, 
@@ -50,12 +31,9 @@ class AddressRepository implements AddressContract
         ]);
     }
 
-    public function findById(string $userId, string $addressId): ?AddressModel
+    public function findById(string $addressId): ?AddressModel
     {
-        return AddressModel::query()
-                            ->where('user_id', $userId)
-                            ->where('address_id', $addressId)
-                            ->first();
+        return AddressModel::findOrFail($addressId)->first();
     }
 
     /**
@@ -63,21 +41,20 @@ class AddressRepository implements AddressContract
      */
     public function update(AddressApiDTO $data, string $addressId): AddressModel
     {
-        $address = $this->findById($data->user_id, $addressId);
+        $address = $this->findById($addressId);
 
         Log::debug('Dados: ', [
             'data' => $data
         ]);
 
         $address->update([
-            'cep' => $data->cep,
             'state' => $data->state, 
             'city' => $data->city, 
             'neighborhood' => $data->neighborhood, 
             'street' => $data->street,  
             'service' => $data->service ?? $address->service, 
-            'longitude' => $data->location['coordinates']['longitude'], 
-            'latitude' => $data->location['coordinates']['latitude'], 
+            'longitude' => $data->location['longitude'], 
+            'latitude' => $data->location['latitude'], 
             'was_edited' => true
         ]);
 
@@ -86,12 +63,10 @@ class AddressRepository implements AddressContract
         return $address;
     }
 
-    public function destroy(string $userId, string $addressId)
+    public function destroy(string $addressId): void
     {
-        $address = $this->findById($userId, $addressId);
+        $address = $this->findById($addressId);
         
         $address->delete();
-
-        return;
     }
 }

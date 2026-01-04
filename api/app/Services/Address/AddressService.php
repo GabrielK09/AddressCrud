@@ -5,11 +5,8 @@ namespace App\Services\Address;
 use App\DTO\Address\api\AddressApiDTO;
 use App\Repositories\Interfaces\Address\AddressContract;
 use App\Exceptions\NotFoundExceptions\Address\AddressNotFoundException;
-use App\Exceptions\NotFoundExceptions\User\UserNotFoundException;
-use App\Repositories\Interfaces\User\UserContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -20,24 +17,9 @@ class AddressService
         protected AddressContract $addressRepository
     ){}
 
-    public function index(string $userId)
+    public function index()
     {
-        return $this->addressRepository->index($userId);
-    }
-
-    private function generateUuid(): string
-    {
-        return (string) Str::uuid();
-    }
-
-    private function generateUniqueUuid(string $userId): string
-    {   
-        do {
-            $uuid = $this->generateUuid();
-            
-        } while ($this->addressRepository->getLastUuId($userId, $uuid));
-
-        return $uuid;
+        return $this->addressRepository->index();
     }
 
     public function fetchApi(string $cep)
@@ -67,31 +49,21 @@ class AddressService
     public function storeFullData(array $data)
     {
         try {
-            $uuid = $this->generateUniqueUuid($data['user_id']);
-
             $coordinates = [
-                'longitude' => $data['longitude']  ?? 'Sem longitude informada',
+                'longitude' => $data['longitude'] ?? 'Sem longitude informada',
                 'latitude' => $data['latitude'] ?? 'Sem latitude informada',
 
             ];
 
             $cepData = new AddressApiDTO(
-                $uuid,
-                $data['user_id'],
-                $data['cep'],
-                $data['state'],
-                $data['city'],
-                $data['neighborhood'],
-                $data['street'],
-                '',
-                $coordinates,
+                cep: formatCEP($data['cep']),
+                state: $data['state'],
+                city: $data['city'],
+                neighborhood: $data['neighborhood'],
+                street: $data['street'],
+                service: '',
+                location: $coordinates,
             );
-
-            Log::debug('storeFullData', [
-                'data' => $cepData,
-                'location' => $cepData->location['longitude'],
-                'uuid' => $uuid
-            ]);
 
             return DB::transaction(fn() => $this->addressRepository->store($cepData));
         } catch (\Throwable $th) {
@@ -102,27 +74,18 @@ class AddressService
     public function storeByCep(array $data)
     {
         try {
-            $uuid = $this->generateUniqueUuid($data['user_id']);
             $fetchApiCep = $this->fetchApi($data['cep']);
 
             $cepData = new AddressApiDTO(
-                $uuid,
-                $data['user_id'],
-                $fetchApiCep['cep'],
-                $fetchApiCep['state'],
-                $fetchApiCep['city'],
-                $fetchApiCep['neighborhood'],
-                $fetchApiCep['street'],
-                $fetchApiCep['service'],
-                $fetchApiCep['location']['coordinates']
+                cep: $fetchApiCep['cep'],
+                state: $fetchApiCep['state'],
+                city: $fetchApiCep['city'],
+                neighborhood: $fetchApiCep['neighborhood'],
+                street: $fetchApiCep['street'],
+                service: $fetchApiCep['service'],
+                location: $fetchApiCep['location']['coordinates']
             );  
             
-            Log::debug('storeByCep', [
-                'type' => $cepData,
-                'location' => $cepData->location,
-                'uuid' => $uuid
-            ]);
-
             return $this->addressRepository->store($cepData);
         } catch (\Throwable $th) {
             throw new \RuntimeException('Erro ao salvar os dados: ' . $th->getMessage());
@@ -130,10 +93,10 @@ class AddressService
         }
     }
 
-    public function show(string $userId, string $addressId)
+    public function show(string $addressId)
     {
         try {
-            $address = $this->addressRepository->findById($userId, $addressId);
+            $address = $this->addressRepository->findById($addressId);
 
             if(!$address)
             {
@@ -155,7 +118,7 @@ class AddressService
 
     public function update(array $data, string $addressId)
     {
-        $address = $this->show($data['user_id'], $addressId);
+        $address = $this->show($addressId);
 
         if(!$address)
         {
@@ -164,30 +127,28 @@ class AddressService
 
         $location = [
             'coordinates' => [
-                'longitude' => $data['longitude'],
-                'latitude' => $data['latitude']
+                'longitude' => $data['longitude'] ?? $address->longitude,
+                'latitude' => $data['latitude'] ?? $address->latitude
             ]
         ];
 
         $cepData = new AddressApiDTO(
-            '',
-            $data['user_id'],
-            $data['cep'],
-            $data['state'],
-            $data['city'],
-            $data['neighborhood'],
-            $data['street'],
-            $data['service'] ?? $address->service,
-            $location['coordinates']
+            cep: '',
+            state: $data['state'] ?? $address->state,
+            city: $data['city'] ?? $address->city,
+            neighborhood: $data['neighborhood'] ?? $address->neighborhood,
+            street: $data['street'] ?? $address->street,
+            service: $address->service,
+            location: $location['coordinates']
         );
 
         return DB::transaction(fn() => $this->addressRepository->update($cepData, $addressId));
     }
 
-    public function destroy(string $userId, string $addressId)
+    public function destroy(string $addressId)
     {
-        $this->show($userId, $addressId);
+        $this->show($addressId);
         
-        return $this->addressRepository->destroy($userId, $addressId);
+        return $this->addressRepository->destroy($addressId);
     }
 }
