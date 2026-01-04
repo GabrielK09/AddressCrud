@@ -1,4 +1,4 @@
-# 📌 Geral
+# ⚠Geral
 
 ### 🛠 Ferramentas
 
@@ -92,15 +92,15 @@ public function __construct(
 
 ## 🏠 Endereços - AddressController
 
-| Método | Rota                                 | Descrição                                  | Auth |
-|-------:|--------------------------------------|--------------------------------------------|:----:|
-| <span style="color: rgb(107, 221, 154)">GET</span>    | /api/v1/address/index               |  Retorna os endereços cadastrados     | 🔐 |
-| <span style="color: rgb(255, 228, 126)">POST</span>   | /api/v1/address/store-full-data                   | Cadastro com todos os dados do endereço  | 🔐 |
-| <span style="color: rgb(255, 228, 126)">POST</span> | /api/v1/address/store-by-cep                  | Cadastro com dados a partir do CEP informado   | 🔐 |
-| <span style="color: rgb(107, 221, 154)">GET</span> | /api/v1/address/show-{address_id}-address            | Exibe dados do endereço por ID do endereço| 🔐 |
-| <span style="color: rgb(107, 221, 154)">GET</span> | /api/v1/address/consult-cep/{cep}                              | Consulta rápida do CEP, sem gravar | 🔐 |
-| <span style="color: rgb(116, 174, 246);">PUT</span> | /api/v1/address/update/{address_id}                            | Alterar dados do endereço por ID| 🔐 |
-| <span style="color: rgb(247, 154, 142);">DELETE</span>   | /api/v1/address/remove/{address_id}                  | Deleta o endereço por ID | 🔐 |
+| Método | Rota                                 | Descrição                                      |
+|-------:|--------------------------------------|------------------------------------------------|
+| <span style="color: rgb(107, 221, 154)">GET</span>    | /api/v1/address/index                  |  Retorna os endereços cadastrados     
+| <span style="color: rgb(255, 228, 126)">POST</span>   | /api/v1/address/store-full-data        | Cadastro com todos os dados do endereço  
+| <span style="color: rgb(255, 228, 126)">POST</span> | /api/v1/address/store-by-cep             | Cadastro com dados a partir do CEP informado   
+| <span style="color: rgb(107, 221, 154)">GET</span> | /api/v1/address/show-{address_id}-address | Exibe dados do endereço por ID do endereço
+| <span style="color: rgb(107, 221, 154)">GET</span> | /api/v1/address/consult-cep/{cep}         | Consulta rápida do CEP, sem gravar 
+| <span style="color: rgb(116, 174, 246);">PUT</span> | /api/v1/address/update/{address_id}      | Alterar dados do endereço por ID
+| <span style="color: rgb(247, 154, 142);">DELETE</span>   | /api/v1/address/remove/{address_id} | Deleta o endereço por ID 
 
 ### Obs:
 - ✅ A rota para cadastro com dados completo do endereço: `/api/v1/address/store-full-data` pode ser utilizada para casos onde o CEP consultado não tem dados atrelado a ele e ou dados insuficientes!

@@ -33,7 +33,7 @@ class AddressRepository implements AddressContract
 
     public function findById(string $addressId): ?AddressModel
     {
-        return AddressModel::findOrFail($addressId)->first();
+        return AddressModel::query()->where('id', $addressId)->first();
     }
 
     /**
