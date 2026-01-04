@@ -111,6 +111,17 @@ public function __construct(
 - Primeiros passos
 
 ```bash
+
+# git clone 
+
+git clone https://github.com/GabrielK09/AddressCrud
+
+# Criando o arquivo .env
+
+cd AddressCrud
+
+cp .env.example .env
+
 # Instalação geral dos pacotes do projeto
 composer install
 
@@ -123,9 +134,8 @@ php artisan route:ca # ca alias para cache
 php artisan config:ca # ca alias para cache
 php artisan config:cle # ca alias para clear
 
-# Iniciando nosso servidor
-
-php artisan serve
+# Subindo o docker
+docker compose up -d --build
 
 ```
 
