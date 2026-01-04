@@ -1,4 +1,4 @@
-# ⚠Geral
+# 📌 Geral
 
 ### 🛠 Ferramentas
 
