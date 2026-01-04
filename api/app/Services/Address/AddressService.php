@@ -4,14 +4,13 @@ namespace App\Services\Address;
 
 use App\DTO\Address\api\AddressApiDTO;
 use App\Repositories\Interfaces\Address\AddressContract;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Exceptions\NotFoundExceptions\Address\AddressNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-
 class AddressService
 {
     public function __construct(
@@ -101,15 +100,16 @@ class AddressService
                 $fetchApiCep['neighborhood'],
                 $fetchApiCep['street'],
                 $fetchApiCep['service'],
-                $fetchApiCep['location']
+                $fetchApiCep['location']['coordinates']
             );  
             
             Log::debug('storeByCep', [
                 'type' => $cepData,
+                'location' => $cepData->location,
                 'uuid' => $uuid
             ]);
 
-            return $this->addressRepository->store($cepData);
+            //return $this->addressRepository->store($cepData);
 
         } catch (\Throwable $th) {
             throw new \RuntimeException('Erro ao salvar os dados: ' . $th->getMessage());
@@ -124,7 +124,7 @@ class AddressService
 
             if(!$address)
             {
-                throw new ModelNotFoundException('Endereço não encontrado!');
+                throw new AddressNotFoundException('Endereço não encontrado!');
             }
 
             return $address;
@@ -133,10 +133,10 @@ class AddressService
 
             if($sqlState === '22P02')
             {
-                throw new \RuntimeException('ID fora do padrão esperado!');
+                throw new \App\Exceptions\QueryExceptions\QueryException('ID fora do padrão esperado!');
             }
 
-            throw new \RuntimeException('Erro na consulta no banco de dados');
+            throw new \App\Exceptions\QueryExceptions\QueryException('Erro na consulta no banco de dados');
 
         } catch (\Throwable $th) {
             throw new \RuntimeException('Erro na consulta no banco de dados: ' . $th->getMessage());
@@ -149,7 +149,7 @@ class AddressService
 
         if(!$address)
         {
-            throw new ModelNotFoundException('Endereço não encontrado!');
+            throw new AddressNotFoundException('Endereço não encontrado!');
         }
 
         $location = [
@@ -168,43 +168,17 @@ class AddressService
             $data['neighborhood'],
             $data['street'],
             $data['service'] ?? $address->service,
-            $location
+            $location['coordinates']
         );
 
         return DB::transaction(fn() => $this->addressRepository->update($cepData, $addressId));
-    }
-
-    public function setMainAddress(string $userId, string $addressId)
-    {
-        $address = $this->show($userId, $addressId);
-
-        if(!$address)
-        {
-            throw new ModelNotFoundException('Endereço não encontrado!');
-        }
-
-        $allAddress = $this->index($userId);
-
-        foreach ($allAddress as $address) {
-            Log::debug('Dentro do foreach', [
-                'address' => $address,
-                'address_id' => $addressId,
-            ]);
-
-            if($address->address_id !== $addressId && $address->is_main_address)
-            {
-                throw new \RuntimeException("Endereço: {$address->address_id} já está cadastrado como primário!");
-            }
-        }
-        
-        return DB::transaction(fn() => $this->addressRepository->setMainAddress($userId, $addressId));
     }
 
     public function destroy(string $userId, string $addressId)
     {
         if(!$this->show($userId, $addressId))
         {
-            throw new ModelNotFoundException('Endereço não localizado ou já deletadog!');
+            throw new AddressNotFoundException('Endereço não localizado ou já deletadog!');
         }
 
         return $this->addressRepository->destroy($userId, $addressId);

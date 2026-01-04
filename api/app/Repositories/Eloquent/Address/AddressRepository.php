@@ -44,8 +44,8 @@ class AddressRepository implements AddressContract
             'neighborhood' => $data->neighborhood, 
             'street' => $data->street,  
             'service' => $data->service, 
-            'longitude' => $data->location['coordinates']['longitude'] ?? 'Sem longitude informada', 
-            'latitude' => $data->location['coordinates']['latitude'] ?? 'Sem longitude latitude', 
+            'longitude' => $data->location->longitude ?? 'Sem longitude informada', 
+            'latitude' => $data->location->latitude ?? 'Sem longitude latitude', 
 
         ]);
     }
@@ -81,18 +81,6 @@ class AddressRepository implements AddressContract
             'was_edited' => true
         ]);
 
-        $address->save();
-
-        return $address;
-    }
-
-    public function setMainAddress(string $userId, string $addressId): AddressModel
-    {
-        $address = $this->findById($userId, $addressId);
-
-        $address->update([
-            'is_main_address' => 1
-        ]);
         $address->save();
 
         return $address;

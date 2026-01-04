@@ -42,4 +42,9 @@ class UserService
             $data['password'],
         );
     }
+
+    public function destroy(string $id)
+    {
+        
+    }
 }

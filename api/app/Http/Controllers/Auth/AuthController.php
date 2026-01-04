@@ -45,19 +45,15 @@ class AuthController extends Controller
         ]);
 
         $user = $this->userService->findByEmail($data['email']);
-
+        
         if(!$user)
         {
-            throw ValidationException::withMessages([
-                'message' => 'Credenciais incorretas.'
-            ]);
+            throw new \App\Exceptions\NotFoundExceptions\User\UserNotFoundException('Credenciais incorretas.');
         }
         
         if($user && !Hash::check($data['password'], $user->password))
         {
-            throw ValidationException::withMessages([
-                'message' => 'Credenciais incorretas.'
-            ]);
+            throw new \App\Exceptions\NotFoundExceptions\User\UserNotFoundException('Credenciais incorretas.');
         }
 
         $token = $user->createToken('api-token')->plainTextToken;

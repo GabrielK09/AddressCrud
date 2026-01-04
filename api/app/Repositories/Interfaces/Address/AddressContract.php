@@ -13,6 +13,5 @@ interface AddressContract
     public function store(AddressApiDTO $data): AddressModel;
     public function findById(string $userId, string $addressId): ?AddressModel;
     public function update(AddressApiDTO $data, string $addressId): AddressModel;
-    public function setMainAddress(string $userId, string $addressId): AddressModel;
     public function destroy(string $userId, string $addressId);
 }

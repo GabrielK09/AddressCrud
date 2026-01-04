@@ -29,6 +29,6 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return apiSuccess('Usuário deletado com sucesso!', $this->userService->destroy($id));
     }
 }

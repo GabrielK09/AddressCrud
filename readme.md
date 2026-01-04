@@ -88,9 +88,6 @@ public function __construct(
 | POST   | /api/v1/auth/register                |  Destinado a criação do usuário da API     | ❌ |
 | POST   | /api/v1/auth/login                   | Login e retorno do token Bearer de acesso  | ❌ |
 | POST   | /api/v1/auth/logout                  | Será feito o logout do usuário da sessão   | ❌ |
-| POST   | /api/v1/auth/forgot-password         | Envio do e-mail para reset da senha        | ❌ |
-| GET    | /api/v1/auth/reset-password/{token}  | Usado para o front end para reset da senha | ❌ |
-| POST   | /api/v1/auth/reset-password          | Confirma o reset da senha                  | ❌ |
 
 ## 🏠 Endereços - AddressController
 
