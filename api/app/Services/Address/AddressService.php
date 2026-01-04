@@ -36,6 +36,7 @@ class AddressService
                         ]
                         )
                         ->withOptions(['verify' => false])
+                        ->timeout(30)
                         ->get($this->apiUrl . "/{$cep}");
 
         if($res->failed())
