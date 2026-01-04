@@ -4,12 +4,23 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
     public function render($request, Throwable $e)
     {
+        if($e instanceof ValidationException)
+        {
+            return apiError(
+                $e->getMessage(),
+                $e->errors(),
+                false,
+                422
+            );
+        }
+
         if($e instanceof \App\Exceptions\QueryExceptions\QueryException)
         {
             return apiError($e->getMessage() ?? 'Erro na consulta do banco de dados', [], false, 400);

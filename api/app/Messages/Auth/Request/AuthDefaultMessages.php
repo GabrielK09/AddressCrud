@@ -13,7 +13,7 @@ enum AuthDefaultMessages: string
 
     case EMAIL_REQUIRED = 'O e-mail do usuário é obrigatório!';
     case EMAIL_STRING_FORMAT = 'O e-mail do usuário precisa estar em um formato válido!';
-    case EMAIL_UNIQUE = 'Esse e-mailo de usuário já está cadastrado!';
+    case EMAIL_UNIQUE = 'Esse e-mail de usuário já está cadastrado!';
 
     case PASSWORD_REQUIRED = 'A senha do usuário é obrigatório!';
     case PASSWORD_MIN = 'A senha do usuário precisa ter pelo menos 8 caracteres!';

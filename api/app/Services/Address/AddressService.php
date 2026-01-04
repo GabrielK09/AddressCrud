@@ -5,6 +5,8 @@ namespace App\Services\Address;
 use App\DTO\Address\api\AddressApiDTO;
 use App\Repositories\Interfaces\Address\AddressContract;
 use App\Exceptions\NotFoundExceptions\Address\AddressNotFoundException;
+use App\Exceptions\NotFoundExceptions\User\UserNotFoundException;
+use App\Repositories\Interfaces\User\UserContract;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -67,6 +69,12 @@ class AddressService
         try {
             $uuid = $this->generateUniqueUuid($data['user_id']);
 
+            $coordinates = [
+                'longitude' => $data['longitude']  ?? 'Sem longitude informada',
+                'latitude' => $data['latitude'] ?? 'Sem latitude informada',
+
+            ];
+
             $cepData = new AddressApiDTO(
                 $uuid,
                 $data['user_id'],
@@ -75,9 +83,15 @@ class AddressService
                 $data['city'],
                 $data['neighborhood'],
                 $data['street'],
-                $data['service'],
-                [],
+                '',
+                $coordinates,
             );
+
+            Log::debug('storeFullData', [
+                'data' => $cepData,
+                'location' => $cepData->location['longitude'],
+                'uuid' => $uuid
+            ]);
 
             return DB::transaction(fn() => $this->addressRepository->store($cepData));
         } catch (\Throwable $th) {
@@ -109,8 +123,7 @@ class AddressService
                 'uuid' => $uuid
             ]);
 
-            //return $this->addressRepository->store($cepData);
-
+            return $this->addressRepository->store($cepData);
         } catch (\Throwable $th) {
             throw new \RuntimeException('Erro ao salvar os dados: ' . $th->getMessage());
             
@@ -124,7 +137,7 @@ class AddressService
 
             if(!$address)
             {
-                throw new AddressNotFoundException('Endereço não encontrado!');
+                throw new AddressNotFoundException('Endereço não localizado!');
             }
 
             return $address;
@@ -137,9 +150,6 @@ class AddressService
             }
 
             throw new \App\Exceptions\QueryExceptions\QueryException('Erro na consulta no banco de dados');
-
-        } catch (\Throwable $th) {
-            throw new \RuntimeException('Erro na consulta no banco de dados: ' . $th->getMessage());
         }
     }
 
@@ -149,7 +159,7 @@ class AddressService
 
         if(!$address)
         {
-            throw new AddressNotFoundException('Endereço não encontrado!');
+            throw new AddressNotFoundException('Endereço não localizado!!');
         }
 
         $location = [
@@ -176,11 +186,8 @@ class AddressService
 
     public function destroy(string $userId, string $addressId)
     {
-        if(!$this->show($userId, $addressId))
-        {
-            throw new AddressNotFoundException('Endereço não localizado ou já deletadog!');
-        }
-
+        $this->show($userId, $addressId);
+        
         return $this->addressRepository->destroy($userId, $addressId);
     }
 }

@@ -44,8 +44,8 @@ class AddressRepository implements AddressContract
             'neighborhood' => $data->neighborhood, 
             'street' => $data->street,  
             'service' => $data->service, 
-            'longitude' => $data->location->longitude ?? 'Sem longitude informada', 
-            'latitude' => $data->location->latitude ?? 'Sem longitude latitude', 
+            'longitude' => $data->location['longitude'], 
+            'latitude' => $data->location['latitude'], 
 
         ]);
     }
