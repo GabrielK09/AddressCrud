@@ -152,7 +152,6 @@ docker compose up -d --build
     "success": true,
     "message": "Endereço cadastrado com sucesso!",
     "data": {
-        "address_id": "05164e99-0fcc-40f9-9af3-bc6abfdef477",
         "cep": "########",
         "state": "##",
         "city": "########",
@@ -161,8 +160,6 @@ docker compose up -d --build
         "service": "open-cep",
         "longitude": "########",
         "latitude": "########",
-        "updated_at": "2026-01-04T17:35:38.000000Z",
-        "created_at": "2026-01-04T17:35:38.000000Z",
         "id": 1
     },
     "status": 201
