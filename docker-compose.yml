@@ -2,13 +2,13 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/php/Dockerfile
+      dockerfile: ./dockerfile
     container_name: laravel_app
     working_dir: /var/www
     volumes:
       - ./api:/var/www
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env_file:
       - /api/.env
-    command: php artisan serve --host=0.0.0.0 --port=8000
+    command: php artisan serve --host=0.0.0.0 --port=8080
